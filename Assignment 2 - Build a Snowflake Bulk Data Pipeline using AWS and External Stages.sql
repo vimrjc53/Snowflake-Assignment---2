@@ -1,3 +1,5 @@
+
+
 1.GOALS
 /*In this project, we will learn how to use snowflake as a query engine. 
   We store our data from snowflake to aws s3 and we will learn various methods to query it from snowflake.*/
@@ -136,13 +138,16 @@ select * from V_CUSTOMER_DATA;
 
 Now we can directly query data from s3 through view. What is the disadvantage of using this approach ? 
 Can you see partitions being scanned in the backend ?
+View only look data from table and cannot store data itself. In this case,
+V_CUSTOMER_DATA not scanning for partition. 
 
+Considering Query Performance, Since we are Querying from a simple view, 
+DML statements are allowed and data retrieval time minimum. 
+But in complex view, group functions for aggregations, Distinct, joins, group by can take more time than querying directly from the table.
 
+Dependency & Maintenance also occurs because VIEWS are dependent on the underlying table structures and we cannot do SCHEMABINDING to prevent changes in main table. 
 
-
-
-
-
+We can query only SHOW VIEWS and SELECT GET_DDL ('VIEW', 'V_CUSTOMER_DATA') function to tracking and managing schema changes.
 
 
 /*Now let’s try to Join the view we created with a table on snowflake*/
@@ -163,18 +168,9 @@ A.C_CUSTOMER_SK = B.C_CUSTOMER_SK;
 
 Now we successfully joined data in s3 with snowflake table. It may look simple but this 
 approach has lot of potential. Can you mention few below, page and observe the execution plan.
-
-
-
-
-
-
-
-How many partitions got scanned from snowflake table : 355
-
-
-
-
+Initially, we established connection between snowflake and s3 using storage integration and uploaded CUSTOMER_TEST data from snowflake to s3 with help of external stage.
+In the above case, DEMO_DB.CUSTOMER_TEST data designed to query data from the perspective one-to-many relationship. So are fetch data from TRANSIENT table with limit 10000 and VIEW by using LEFT OUTER JOIN.
+How many partitions got scanned from snowflake table :  355 
 
 5.UNLOAD DATA BACK TO S3
 /*This approach leverages micro partitions in snowflake for lookup table still giving 
@@ -193,4 +189,14 @@ A.C_CUSTOMER_SK = B.C_CUSTOMER_SK
 );
 
 6.ADVANTAGES AND DISADVANTAGES
+Advantages of using Snowflake querying from S3:
+Scalability: Snowflake's cloud-based architecture allows it to scale up or down to handle large amounts of data from S3, making it an ideal choice for big data analytics & reporting.
+Performance: Snowflake's columnar storage and parallel processing capabilities enable fast query performance, even on large datasets from S3.
+Security: Snowflake provides robust security features, such as encryption and access controls, to ensure that data from S3 is protected during querying and analysis.
+Flexibility: Snowflake supports a wide range of data formats and can handle semi-structured and unstructured data from S3, making it a versatile choice for data analytics.
+
+Disadvantages of using Snowflake during querying from S3:
+Cost: Snowflake can be a costly solution, especially for large-scale data analytics workloads that involve querying data from S3.
+Complexity: Snowflake requires expertise in SQL and data warehousing, which can be a barrier for organizations without experienced personnel.
+Data Ingestion: Snowflake requires data to be ingested from S3, which can be a time-consuming process, especially for large datasets.
 
