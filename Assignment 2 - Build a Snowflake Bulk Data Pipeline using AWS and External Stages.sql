@@ -16,6 +16,11 @@ CREATE OR REPLACE DATABASE DEMO_DB;
 2.PREPARATION
 /*Before we start, let’s establish connection between snowflake and s3, then
   upload some sample data from snowflake to s3. */ 
+  
+-- Create Transient Table object to get data   
+ CREATE OR REPLACE TRANSIENT TABLE DEMO_DB.PUBLIC.CUSTOMER_TEST 
+ AS 
+ SELECT * FROM "SNOWFLAKE_SAMPLE_DATA"."TPCDS_SF100TCL"."CUSTOMER"
 
 -- Create integration object with s3 
 create or replace storage integration S3_INTEG_CUS_DATA_CSV
