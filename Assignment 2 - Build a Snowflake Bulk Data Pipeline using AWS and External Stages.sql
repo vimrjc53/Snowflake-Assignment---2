@@ -173,6 +173,7 @@ A.C_CUSTOMER_SK = B.C_CUSTOMER_SK;
 
 Now we successfully joined data in s3 with snowflake table. It may look simple but this 
 approach has lot of potential. Can you mention few below, page and observe the execution plan.
+We can query data directly from s3 without importing to snowflake. This leverages the storage cost reduction methods and with standard SQL , we inspect data before loading or unloading.
 Initially, we established connection between snowflake and s3 using storage integration and uploaded CUSTOMER_TEST data from snowflake to s3 with help of external stage.
 In the above case, DEMO_DB.CUSTOMER_TEST data designed to query data from the perspective one-to-many relationship. So are fetch data from TRANSIENT table with limit 10000 and VIEW by using LEFT OUTER JOIN.
 How many partitions got scanned from snowflake table :  355 
